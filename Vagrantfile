@@ -1,6 +1,8 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+es_server = "10.100.2.10"
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -45,9 +47,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  config.vm.provision "shell" do |s|
-    s.path="bootstrap/setup.sh"
-  end
+ 
+ # config.vm.provision "shell" do |s|
+
+ #   s.path="bootstrap/setup.sh"
+
+ # end
+ 
   # config.vm.provider "virtualbox" do |vb|
   #   # Don't boot with headless mode
   #   vb.gui = true
@@ -77,10 +83,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # #               Managed by Puppet.\n"
   # # }
   #
-  # config.vm.provision "puppet" do |puppet|
-  #   puppet.manifests_path = "manifests"
-  #   puppet.manifest_file  = "site.pp"
-  # end
+  config.vm.provision "puppet" do |puppet|
+      puppet.manifests_path = "puppet/manifests/"
+      puppet.manifest_file  = "kibana.pp"
+      puppet.module_path   = "puppet/modules"
+      puppet.facter = { "elasticsearchnode" => es_server }
+    #  puppet.options        = "--verbose --debug"
+  end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding
